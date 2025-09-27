@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Tab Domain Classifier",
   "version": "1.0",
-  "description": "自动分类和标记不同域名的标签页",
+  "description": "自动将相同域名的标签页分组管理",
   
   "permissions": [
     "tabs",

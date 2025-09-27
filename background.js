@@ -132,19 +132,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         }
       }
       
-      // 为当前标签页发送分类信息
-      chrome.tabs.sendMessage(tabId, {
-        action: 'updateTabColor',
-        domain: mainDomain,
-        displayName: displayName,
-        color: color,
-        groupInfo: {
-          totalTabs: sameDomainTabs.length,
-          currentIndex: sameDomainTabs.findIndex(t => t.id === tabId) + 1
-        }
-      }).catch(() => {
-        // 忽略错误，可能是页面还没加载完成
-      });
+      // 不再向content script发送消息
+      // 只使用Chrome原生标签页分组功能
     }
   }
 });
