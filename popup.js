@@ -1,5 +1,28 @@
 document.addEventListener('DOMContentLoaded', function() {
   loadDomainStats();
+  
+  // 添加分组按钮事件监听
+  document.getElementById('groupTabsBtn').addEventListener('click', function() {
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = '正在分组...';
+    
+    chrome.runtime.sendMessage({ action: 'groupTabsByDomain' }, function(response) {
+      if (response && response.success) {
+        btn.textContent = '✅ 分组完成';
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = '🏷️ 创建标签页分组';
+        }, 2000);
+      } else {
+        btn.textContent = '❌ 分组失败';
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = '🏷️ 创建标签页分组';
+        }, 2000);
+      }
+    });
+  });
 });
 
 function loadDomainStats() {

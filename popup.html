@@ -211,6 +211,41 @@
       background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
       margin: 16px 0;
     }
+    
+    /* 操作按钮样式 */
+    .action-buttons {
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    
+    .group-btn {
+      background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+    }
+    
+    .group-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
+    }
+    
+    .group-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+    }
+    
+    .group-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
   </style>
 </head>
 <body>
@@ -228,6 +263,12 @@
         <div class="stat-number" id="totalDomains">0</div>
         <div class="stat-label">域名数量</div>
       </div>
+    </div>
+    
+    <div class="action-buttons">
+      <button id="groupTabsBtn" class="group-btn">
+        🏷️ 创建标签页分组
+      </button>
     </div>
     
     <div id="domainList" class="domain-list">

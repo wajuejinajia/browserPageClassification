@@ -6,8 +6,9 @@
   
   "permissions": [
     "tabs",
-    "storage",
-    "activeTab"
+    "storage", 
+    "activeTab",
+    "tabGroups"
   ],
   
   "background": {
