@@ -73,7 +73,7 @@ function displayStats(stats, totalDomains) {
           <div class="domain-name">${domain}</div>
           <div class="tab-count">
             ${info.count} 个标签页
-            <button class="expand-btn" onclick="toggleTabs('${domain}')">
+            <button class="expand-btn" data-domain="${domain}">
               <span id="toggle-${domain}">展开</span>
             </button>
           </div>
@@ -93,6 +93,14 @@ function displayStats(stats, totalDomains) {
       const tabId = parseInt(this.dataset.tabId);
       chrome.tabs.update(tabId, { active: true });
       window.close();
+    });
+  });
+  
+  // 添加展开/收起按钮事件
+  document.querySelectorAll('.expand-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const domain = this.dataset.domain;
+      toggleTabs(domain);
     });
   });
 }
