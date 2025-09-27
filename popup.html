@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 380px;
+      min-height: 420px;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #1d1d1f;
+      overflow: hidden;
+    }
+    
+    .container {
+      padding: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+    
+    .title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin: 0;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+    
+    .stat-item {
+      text-align: center;
+      flex: 1;
+    }
+    
+    .stat-number {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #8E8E93;
+      letter-spacing: -0.2px;
+    }
+    
+    .domain-list {
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    
+    .domain-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .domain-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .domain-list::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 2px;
+    }
+    
+    .domain-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .domain-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+      background: rgba(255, 255, 255, 0.95);
+    }
+    
+    .domain-item:active {
+      transform: translateY(-1px);
+      transition: all 0.1s;
+    }
+    
+    .color-indicator {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      margin-right: 14px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+    
+    .domain-info {
+      flex-grow: 1;
+    }
+    
+    .domain-name {
+      font-weight: 600;
+      color: #1d1d1f;
+      font-size: 15px;
+      margin-bottom: 3px;
+      letter-spacing: -0.3px;
+    }
+    
+    .tab-count {
+      font-size: 13px;
+      color: #8E8E93;
+      font-weight: 500;
+    }
+    
+    .tab-list {
+      margin-top: 12px;
+      padding-left: 32px;
+    }
+    
+    .tab-item {
+      font-size: 12px;
+      color: #6D6D70;
+      margin-bottom: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      display: block;
+    }
+    
+    .tab-item:hover {
+      color: #007AFF;
+      background: rgba(0, 122, 255, 0.08);
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #8E8E93;
+      font-weight: 500;
+    }
+    
+    .no-tabs {
+      text-align: center;
+      padding: 60px 20px;
+      color: #8E8E93;
+      font-weight: 500;
+      font-style: italic;
+    }
+    
+    .expand-btn {
+      background: none;
+      border: none;
+      color: #007AFF;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 8px;
+      margin-left: 8px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    
+    .expand-btn:hover {
+      background: rgba(0, 122, 255, 0.08);
+    }
+    
+    .expand-btn:active {
+      background: rgba(0, 122, 255, 0.15);
+      transform: scale(0.95);
+    }
+    
+    /* 添加毛玻璃效果的分隔线 */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="title">🏷️ 标签页分类器</h1>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-number" id="totalTabs">0</div>
+        <div class="stat-label">总标签页</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="totalDomains">0</div>
+        <div class="stat-label">域名数量</div>
+      </div>
+    </div>
+    
+    <div id="domainList" class="domain-list">
+      <div class="loading">正在加载...</div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
