@@ -6,8 +6,7 @@
   
   "permissions": [
     "tabs",
-    "storage", 
-    "activeTab",
+    "storage",
     "tabGroups"
   ],
   
@@ -16,13 +15,6 @@
     "type": "module"
   },
   
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "run_at": "document_start"
-    }
-  ],
   
   "action": {
     "default_popup": "popup.html",
