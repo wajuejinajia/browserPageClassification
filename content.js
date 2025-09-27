@@ -21,8 +21,7 @@ function updateTabTitle(domain, displayName, color, groupInfo) {
     updateFavicon(color, displayName);
   }
   
-  // 在浏览器顶部添加持久的域名分类指示器
-  addPersistentDomainIndicator(domain, displayName, color, groupInfo);
+  // 不再添加页面内的视觉指示器
 }
 
 // 更新页面图标 - 添加域名颜色边框
@@ -86,111 +85,6 @@ function updateFaviconElement(dataUrl) {
   head.appendChild(newFavicon);
 }
 
-// 添加持久的域名分类指示器 - 直接在浏览器顶部显示
-function addPersistentDomainIndicator(domain, displayName, color, groupInfo) {
-  // 检查是否已存在指示器
-  if (document.getElementById('persistent-domain-indicator')) {
-    return;
-  }
-  
-  // 创建样式
-  const styleSheet = document.createElement('style');
-  styleSheet.id = 'domain-indicator-styles';
-  styleSheet.textContent = `
-    /* 持久的顶部域名指示器 */
-    .persistent-domain-indicator {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, ${color}40, ${color}, ${color}40);
-      z-index: 999999;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      animation: slideDown 0.3s ease-out;
-    }
-    
-    /* 左上角域名标签 */
-    .domain-tag {
-      position: fixed;
-      top: 8px;
-      left: 8px;
-      background: ${color};
-      color: white;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      z-index: 999998;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      animation: slideInLeft 0.3s ease-out;
-      opacity: 0.9;
-    }
-    
-    /* 右上角分组信息 */
-    .group-info {
-      position: fixed;
-      top: 8px;
-      right: 8px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid ${color};
-      color: #333;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-      font-size: 11px;
-      font-weight: 500;
-      z-index: 999998;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      animation: slideInRight 0.3s ease-out;
-      opacity: 0.9;
-    }
-    
-    @keyframes slideDown {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(0); }
-    }
-    
-    @keyframes slideInLeft {
-      from { transform: translateX(-100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 0.9; }
-    }
-    
-    @keyframes slideInRight {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 0.9; }
-    }
-  `;
-  document.head.appendChild(styleSheet);
-  
-  // 创建持久的顶部指示条
-  const indicator = document.createElement('div');
-  indicator.id = 'persistent-domain-indicator';
-  indicator.className = 'persistent-domain-indicator';
-  document.body.appendChild(indicator);
-  
-  // 创建域名标签
-  const domainTag = document.createElement('div');
-  domainTag.className = 'domain-tag';
-  domainTag.textContent = displayName;
-  document.body.appendChild(domainTag);
-  
-  // 如果有分组信息，显示分组信息
-  if (groupInfo) {
-    const groupInfoElement = document.createElement('div');
-    groupInfoElement.className = 'group-info';
-    groupInfoElement.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 4px;">
-        <div style="width: 8px; height: 8px; background: ${color}; border-radius: 50%;"></div>
-        <span>${groupInfo.currentIndex}/${groupInfo.totalTabs}</span>
-      </div>
-    `;
-    document.body.appendChild(groupInfoElement);
-  }
-}
 
 // 页面加载完成后立即执行
 if (document.readyState === 'loading') {
@@ -200,13 +94,6 @@ if (document.readyState === 'loading') {
 }
 
 function initializeClassifier() {
-  // 向background script请求当前页面的颜色信息
-  const domain = window.location.hostname;
-  if (domain) {
-    chrome.runtime.sendMessage({
-      action: 'requestColor',
-      domain: domain,
-      url: window.location.href
-    });
-  }
+  // 页面加载完成，等待background script发送分类信息
+  // 不需要主动请求，background script会自动处理
 }
