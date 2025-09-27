@@ -53,19 +53,28 @@ function assignColorToDomain(domain) {
   return domainColorMap[domain];
 }
 
-// 监听标签页更新
+// 监听标签页更新 - 自动分组和分类
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url) {
     const domain = getDomainFromUrl(tab.url);
     if (domain) {
       const color = assignColorToDomain(domain);
       
-      // 获取同域名的所有标签页进行分组处理
+      // 获取同域名的所有标签页
       const allTabs = await chrome.tabs.query({});
       const sameDomainTabs = allTabs.filter(t => {
         const tabDomain = getDomainFromUrl(t.url);
         return tabDomain === domain;
       });
+      
+      // 自动创建标签页分组（如果有多个相同域名的标签页）
+      if (sameDomainTabs.length > 1) {
+        try {
+          await autoGroupTabsByDomain(domain, sameDomainTabs, color);
+        } catch (e) {
+          console.log('自动分组失败:', e);
+        }
+      }
       
       // 为当前标签页发送分类信息
       chrome.tabs.sendMessage(tabId, {
@@ -79,17 +88,35 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       }).catch(() => {
         // 忽略错误，可能是页面还没加载完成
       });
-      
-      // 尝试使用Chrome的标签页分组API（如果可用）
-      try {
-        if (chrome.tabGroups && sameDomainTabs.length > 1) {
-          await groupTabsByDomain(domain, sameDomainTabs, color);
-        }
-      } catch (e) {
-        console.log('标签页分组功能不可用:', e);
-      }
     }
   }
+});
+
+// 监听新标签页创建
+chrome.tabs.onCreated.addListener(async (tab) => {
+  // 延迟处理，等待URL加载
+  setTimeout(async () => {
+    if (tab.url) {
+      const domain = getDomainFromUrl(tab.url);
+      if (domain) {
+        const allTabs = await chrome.tabs.query({});
+        const sameDomainTabs = allTabs.filter(t => {
+          const tabDomain = getDomainFromUrl(t.url);
+          return tabDomain === domain;
+        });
+        
+        // 如果有多个相同域名的标签页，自动分组
+        if (sameDomainTabs.length > 1) {
+          const color = assignColorToDomain(domain);
+          try {
+            await autoGroupTabsByDomain(domain, sameDomainTabs, color);
+          } catch (e) {
+            console.log('新标签页自动分组失败:', e);
+          }
+        }
+      }
+    }
+  }, 1000);
 });
 
 // 监听标签页激活
@@ -109,28 +136,46 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
   }
 });
 
-// 尝试使用Chrome标签页分组API
-async function groupTabsByDomain(domain, tabs, color) {
+// 自动分组相同域名的标签页
+async function autoGroupTabsByDomain(domain, tabs, color) {
   try {
     // 检查是否已存在该域名的分组
     const existingGroups = await chrome.tabGroups.query({});
     let targetGroup = existingGroups.find(group => group.title === domain);
     
-    if (!targetGroup && tabs.length > 1) {
+    if (targetGroup) {
+      // 如果分组已存在，将新标签页添加到现有分组
+      const ungroupedTabs = tabs.filter(tab => tab.groupId === -1);
+      if (ungroupedTabs.length > 0) {
+        const tabIds = ungroupedTabs.map(tab => tab.id);
+        await chrome.tabs.group({ 
+          tabIds: tabIds, 
+          groupId: targetGroup.id 
+        });
+      }
+    } else if (tabs.length > 1) {
       // 创建新的标签页分组
       const tabIds = tabs.map(tab => tab.id);
       const groupId = await chrome.tabs.group({ tabIds: tabIds });
       
       // 设置分组属性
+      const domainName = domain.split('.')[0];
       await chrome.tabGroups.update(groupId, {
-        title: domain,
+        title: `${domainName} (${tabs.length})`,
         color: getGroupColorFromHex(color),
         collapsed: false
       });
+      
+      console.log(`已创建 ${domain} 的标签页分组，包含 ${tabs.length} 个标签页`);
     }
   } catch (e) {
-    console.log('无法创建标签页分组:', e);
+    console.log('自动分组失败:', e);
   }
+}
+
+// 手动分组功能（保留原有功能）
+async function groupTabsByDomain(domain, tabs, color) {
+  return autoGroupTabsByDomain(domain, tabs, color);
 }
 
 // 将十六进制颜色转换为Chrome分组颜色

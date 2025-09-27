@@ -5,23 +5,40 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('groupTabsBtn').addEventListener('click', function() {
     const btn = this;
     btn.disabled = true;
-    btn.textContent = '正在分组...';
+    btn.textContent = '正在整理...';
     
     chrome.runtime.sendMessage({ action: 'groupTabsByDomain' }, function(response) {
       if (response && response.success) {
-        btn.textContent = '✅ 分组完成';
+        btn.textContent = '✅ 整理完成';
         setTimeout(() => {
           btn.disabled = false;
-          btn.textContent = '🏷️ 创建标签页分组';
-        }, 2000);
+          btn.textContent = '🏷️ 重新整理分组';
+          loadDomainStats(); // 刷新统计
+        }, 1500);
       } else {
-        btn.textContent = '❌ 分组失败';
+        btn.textContent = '❌ 整理失败';
         setTimeout(() => {
           btn.disabled = false;
-          btn.textContent = '🏷️ 创建标签页分组';
-        }, 2000);
+          btn.textContent = '🏷️ 重新整理分组';
+        }, 1500);
       }
     });
+  });
+  
+  // 添加刷新按钮事件监听
+  document.getElementById('refreshBtn').addEventListener('click', function() {
+    const btn = this;
+    btn.textContent = '🔄 刷新中...';
+    btn.disabled = true;
+    
+    setTimeout(() => {
+      loadDomainStats();
+      btn.textContent = '✅ 已刷新';
+      setTimeout(() => {
+        btn.textContent = '🔄 刷新分类';
+        btn.disabled = false;
+      }, 1000);
+    }, 500);
   });
 });
 
@@ -73,6 +90,10 @@ function displayStats(stats, totalDomains) {
           <div class="domain-name">${domain}</div>
           <div class="tab-count">
             ${info.count} 个标签页
+            ${info.tabs.some(tab => tab.groupId !== -1) ? 
+              '<span style="color: #34C759; font-weight: 600;">● 已分组</span>' : 
+              '<span style="color: #FF9500; font-weight: 600;">○ 未分组</span>'
+            }
             <button class="expand-btn" data-domain="${domain}">
               <span id="toggle-${domain}">展开</span>
             </button>

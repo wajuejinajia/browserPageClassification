@@ -246,6 +246,25 @@
       cursor: not-allowed;
       transform: none;
     }
+    
+    .refresh-btn {
+      background: linear-gradient(135deg, #34C759 0%, #30D158 100%);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 3px 10px rgba(52, 199, 89, 0.3);
+      margin-left: 8px;
+    }
+    
+    .refresh-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(52, 199, 89, 0.4);
+    }
   </style>
 </head>
 <body>
@@ -267,7 +286,10 @@
     
     <div class="action-buttons">
       <button id="groupTabsBtn" class="group-btn">
-        🏷️ 创建标签页分组
+        🏷️ 重新整理分组
+      </button>
+      <button id="refreshBtn" class="refresh-btn">
+        🔄 刷新分类
       </button>
     </div>
     
