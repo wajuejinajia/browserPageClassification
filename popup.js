@@ -87,7 +87,7 @@ function displayStats(stats, totalDomains) {
       <div class="domain-item">
         <div class="color-indicator" style="background-color: ${info.color}"></div>
         <div class="domain-info">
-          <div class="domain-name">${domain}</div>
+          <div class="domain-name">${info.displayName || domain}</div>
           <div class="tab-count">
             ${info.count} 个标签页
             ${info.tabs.some(tab => tab.groupId !== -1) ? 

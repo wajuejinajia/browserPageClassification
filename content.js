@@ -1,33 +1,32 @@
 // 监听来自background script的消息
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'updateTabColor') {
-    updateTabTitle(request.domain, request.color, request.groupInfo);
+    updateTabTitle(request.domain, request.displayName, request.color, request.groupInfo);
   }
 });
 
 // 更新标签页标题，添加域名分类标记
-function updateTabTitle(domain, color, groupInfo) {
+function updateTabTitle(domain, displayName, color, groupInfo) {
   const originalTitle = document.title;
   
-  // 创建简洁的域名标识 - 使用彩色圆点和域名
-  const domainName = domain.split('.')[0].toUpperCase();
+  // 使用显示名称而不是域名
   const colorDot = '●';
   
   // 检查标题是否已经包含域名标记
-  if (!originalTitle.includes('●') && !originalTitle.includes(`[${domainName}]`)) {
-    // 在标题前添加彩色圆点和域名标记
-    document.title = `${colorDot} ${domainName} | ${originalTitle}`;
+  if (!originalTitle.includes('●') && !originalTitle.includes(`[${displayName}]`)) {
+    // 在标题前添加彩色圆点和显示名称
+    document.title = `${colorDot} ${displayName} | ${originalTitle}`;
     
     // 更新favicon添加颜色标识
-    updateFavicon(color, domain);
+    updateFavicon(color, displayName);
   }
   
   // 在浏览器顶部添加持久的域名分类指示器
-  addPersistentDomainIndicator(domain, color, groupInfo);
+  addPersistentDomainIndicator(domain, displayName, color, groupInfo);
 }
 
 // 更新页面图标 - 添加域名颜色边框
-function updateFavicon(color, domain) {
+function updateFavicon(color, displayName) {
   try {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -55,13 +54,13 @@ function updateFavicon(color, domain) {
       img.crossOrigin = 'anonymous';
       img.src = originalFavicon.href;
     } else {
-      // 如果没有原始favicon，显示域名首字母
+      // 如果没有原始favicon，显示显示名称首字母
       ctx.fillStyle = color;
       ctx.font = 'bold 10px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       
-      const firstLetter = domain.split('.')[0].charAt(0).toUpperCase();
+      const firstLetter = displayName.charAt(0);
       ctx.fillText(firstLetter, 8, 8);
       
       updateFaviconElement(canvas.toDataURL());
@@ -88,7 +87,7 @@ function updateFaviconElement(dataUrl) {
 }
 
 // 添加持久的域名分类指示器 - 直接在浏览器顶部显示
-function addPersistentDomainIndicator(domain, color, groupInfo) {
+function addPersistentDomainIndicator(domain, displayName, color, groupInfo) {
   // 检查是否已存在指示器
   if (document.getElementById('persistent-domain-indicator')) {
     return;
@@ -176,7 +175,7 @@ function addPersistentDomainIndicator(domain, color, groupInfo) {
   // 创建域名标签
   const domainTag = document.createElement('div');
   domainTag.className = 'domain-tag';
-  domainTag.textContent = domain.split('.')[0].toUpperCase();
+  domainTag.textContent = displayName;
   document.body.appendChild(domainTag);
   
   // 如果有分组信息，显示分组信息
