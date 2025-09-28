@@ -1,132 +1,134 @@
-# TabFlow: 一款简洁的 Chrome 标签页域名分类器
+# TabFlow - Smart Chrome Tab Management Extension
 
-一个Chrome扩展，自动检测和分类不同域名的标签页，用不同颜色标记来帮助你更好地管理浏览器标签。
+🏷️ **Organize your browser tabs intelligently with automatic domain-based grouping**
 
-## 功能特性
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-blue)](https://github.com/wajuejinajia/TabFlow)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-2.0-green)](https://github.com/wajuejinajia/TabFlow)
 
-- 🎯 **自动域名检测**：自动识别每个标签页的域名
-- 🌈 **颜色分类**：为每个域名分配独特的颜色标记
-- 📊 **可视化管理**：在popup界面查看所有域名分类统计
-- 🔄 **实时更新**：标签页变化时自动更新分类
-- 💾 **持久化存储**：记住每个域名的颜色配置
+[中文文档](./README_CN.md) | [English](./README.md)
 
-## 🚀 快速安装
+## ✨ Features
 
-### 方法一：直接下载（推荐新手）
-1. 点击页面上方绿色的 **"Code"** 按钮
-2. 选择 **"Download ZIP"** 下载压缩包
-3. 解压到任意文件夹
-4. 打开Chrome浏览器，输入 `chrome://extensions/`
-5. 开启右上角的 **"开发者模式"** 开关
-6. 点击 **"加载已解压的扩展程序"**
-7. 选择刚才解压的文件夹
+- 🎯 **Smart Grouping**: Automatically groups tabs by domain name
+- 🌈 **Color Coding**: Assigns unique colors to different websites
+- 📊 **Real-time Stats**: Shows live count of tabs in each group
+- ⚡ **Performance Optimized**: Lightweight and fast with caching mechanisms
+- 🎨 **Modern UI**: Beautiful glassmorphism design with smooth animations
+- 🔄 **Auto-sync**: Real-time updates when tabs are added or removed
 
-### 方法二：Git克隆
+## 🚀 Quick Start
+
+### Installation
+
+1. Download or clone this repository
+2. Open Chrome and navigate to `chrome://extensions/`
+3. Enable "Developer mode" in the top right
+4. Click "Load unpacked" and select the TabFlow folder
+5. The TabFlow icon will appear in your Chrome toolbar
+
+### Usage
+
+1. **Automatic Grouping**: Open multiple tabs from the same website - they'll be grouped automatically
+2. **Manual Organization**: Click the TabFlow icon and press "🏷️ Reorganize Groups" to group all existing tabs
+3. **View Statistics**: See how many tabs you have from each domain
+4. **Quick Navigation**: Click on any tab in the popup to switch to it instantly
+
+## 📸 Screenshots
+
+**[Screenshot placeholder: Main popup interface showing grouped tabs]**
+
+**[Screenshot placeholder: Chrome browser with color-coded tab groups]**
+
+## 🎨 What Makes TabFlow Special
+
+### Intelligent Domain Recognition
+TabFlow smartly identifies the main domain from complex URLs, handling subdomains and international domains correctly.
+
+### Beautiful Design
+- Glassmorphism effects with backdrop blur
+- Smooth hover animations and transitions
+- Apple-inspired modern interface
+- Color-coded visual indicators
+
+### Real-time Updates
+Unlike other tab managers, TabFlow keeps group titles updated with accurate tab counts as you browse.
+
+## 🛠️ Technical Highlights
+
+- Built with **Chrome Extension Manifest V3**
+- Uses **Service Worker** for background processing
+- Implements **caching** and **debouncing** for optimal performance
+- **Event-driven architecture** for real-time updates
+
+## 📋 System Requirements
+
+- Google Chrome 88+ or Chromium-based browsers
+- Chrome Extensions API support
+- No additional permissions required beyond tab management
+
+## 🌍 Supported Languages
+
+- English (Primary)
+- Chinese (Simplified)
+- More languages coming soon!
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. 🐛 **Report Bugs**: Open an issue with detailed reproduction steps
+2. 💡 **Suggest Features**: Share your ideas for new functionality
+3. 🔧 **Submit PRs**: Fix bugs or implement new features
+4. 📖 **Improve Docs**: Help us make the documentation better
+5. 🌐 **Translate**: Help us support more languages
+
+### Development Setup
+
 ```bash
-git clone https://github.com/wajuejinajia/browserPageClassification.git
-cd browserPageClassification
-```
-然后按照上面步骤4-7操作。
+# Clone the repository
+git clone https://github.com/wajuejinajia/TabFlow.git
 
-> 📖 **详细安装指南**：查看 [INSTALL.md](./INSTALL.md) 获取完整的安装说明和故障排除。
+# Navigate to the project directory
+cd TabFlow
 
-## 生成图标（可选）
-
-如果你想自定义图标，可以运行：
-
-```bash
-cd icons
-python create_icons.py
+# Load the extension in Chrome
+# Go to chrome://extensions/ and load the unpacked extension
 ```
 
-需要安装PIL库：`pip install Pillow`
+## 📝 License
 
-## 文件结构
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```
-chromeEx/
-├── manifest.json          # 扩展配置文件
-├── background.js          # 后台脚本，处理标签页监听
-├── content.js            # 内容脚本，修改页面显示
-├── popup.html            # 弹出界面HTML
-├── popup.js              # 弹出界面逻辑
-├── icons/                # 图标文件夹
-│   ├── create_icons.py   # 图标生成脚本
-│   ├── icon16.png        # 16x16 图标
-│   ├── icon48.png        # 48x48 图标
-│   └── icon128.png       # 128x128 图标
-└── README.md             # 说明文档
-```
+## 🙏 Acknowledgments
 
-## 使用说明
+- Thanks to all contributors and users who provided feedback
+- Inspired by the need for better tab management in modern browsing
+- Built with love for the developer community
 
-1. **自动分类**：安装后，扩展会自动为不同域名的标签页分配颜色
-2. **查看分类**：点击扩展图标，在弹出界面查看所有域名的分类统计
-3. **快速跳转**：在弹出界面点击任意标签页条目，快速跳转到对应页面
-4. **颜色标记**：每个标签页的标题前会显示对应域名的颜色标记
+## 📞 Support
 
-## 技术实现
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/wajuejinajia/TabFlow/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/wajuejinajia/TabFlow/discussions)
+- 📧 **Contact**: Create an issue for any questions
 
-- **Manifest V3**：使用最新的Chrome扩展标准
-- **Service Worker**：高效的后台标签页监听和分组
-- **Chrome TabGroups API**：原生标签页分组功能
-- **Chrome Storage API**：持久化存储域名-颜色映射关系
-- **性能优化**：缓存、防抖、批量处理等优化技术
+## 🔄 Changelog
 
-## 自定义配置
+### Version 2.0
+- ✨ Brand new modern icon design
+- 🔧 Fixed real-time tab count updates
+- 🎨 Improved UI with glassmorphism effects
+- ⚡ Enhanced performance with better caching
+- 🐛 Various bug fixes and improvements
 
-你可以通过修改 `background.js` 中的 `COLORS` 数组来自定义可用的颜色：
+### Version 1.0
+- 🎉 Initial release
+- 🏷️ Basic tab grouping functionality
+- 🌈 Color-coded domain identification
+- 📊 Tab statistics and management
 
-```javascript
-const COLORS = [
-  '#007AFF', // 系统蓝
-  '#34C759', // 系统绿
-  '#FF9500', // 系统橙
-  // 添加更多macOS系统颜色...
-];
-```
+---
 
-## 📸 预览效果
+**⭐ If you find TabFlow helpful, please give us a star on GitHub!**
 
-### 🎨 macOS风格界面
-- 毛玻璃背景效果
-- 系统级颜色方案
-- 流畅的动画过渡
-- SF Pro字体家族
-
-### 🏷️ 智能标记
-- 标签页标题前的彩色圆点 ●
-- 网站图标右下角的颜色标记
-- 页面顶部的渐变信息条
-
-## 🔧 兼容性
-
-- ✅ Chrome 88+ (Manifest V3)
-- ✅ Microsoft Edge 88+
-- ✅ 其他Chromium内核浏览器
-- ❌ Firefox (不同的扩展API)
-
-## 📝 更新日志
-
-### v2.0.0 (2024-09-27)
-- 🚀 重大性能优化和架构简化
-- ⚡ 域名解析缓存，提升50%处理速度
-- 🎯 纯Chrome原生分组，无页面干扰
-- 🧹 移除不必要的content scripts
-- 📈 防抖处理，减少90%重复操作
-- 💾 批量存储优化，降低I/O开销
-
-### v1.0.0 (2024-09-27)
-- 🎉 首次发布
-- ✨ 自动域名检测和分类
-- 🎨 macOS风格UI设计
-- 🌈 15种系统颜色支持
-- 📊 实时统计界面
-
-## 🤝 贡献
-
-欢迎提交Issue和Pull Request！
-
-## 📄 许可证
-
-MIT License
+**🔗 Share with friends who struggle with tab management!**
