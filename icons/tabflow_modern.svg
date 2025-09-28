@@ -1,0 +1,77 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 主渐变 -->
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 卡片渐变 -->
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95" />
+      <stop offset="100%" style="stop-color:#f8f9fa;stop-opacity:0.9" />
+    </linearGradient>
+    
+    <!-- 阴影滤镜 -->
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="2" result="offset"/>
+      <feFlood flood-color="#000000" flood-opacity="0.15"/>
+      <feComposite in2="offset" operator="in"/>
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+    
+    <!-- 发光效果 -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- 背景圆形 -->
+  <circle cx="64" cy="64" r="58" fill="url(#mainGradient)" filter="url(#softShadow)" />
+  
+  <!-- 内圈装饰 -->
+  <circle cx="64" cy="64" r="52" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
+  
+  <!-- 标签页卡片组 -->
+  <!-- 第一张卡片 -->
+  <rect x="24" y="42" width="44" height="10" rx="5" ry="5" 
+        fill="url(#cardGradient)" filter="url(#softShadow)" />
+  <rect x="26" y="44" width="8" height="6" rx="1" ry="1" fill="#667eea" opacity="0.7" />
+  
+  <!-- 第二张卡片 -->
+  <rect x="30" y="52" width="44" height="10" rx="5" ry="5" 
+        fill="url(#cardGradient)" filter="url(#softShadow)" />
+  <rect x="32" y="54" width="8" height="6" rx="1" ry="1" fill="#764ba2" opacity="0.7" />
+  
+  <!-- 第三张卡片 -->
+  <rect x="36" y="62" width="44" height="10" rx="5" ry="5" 
+        fill="url(#cardGradient)" filter="url(#softShadow)" />
+  <rect x="38" y="64" width="8" height="6" rx="1" ry="1" fill="#f093fb" opacity="0.7" />
+  
+  <!-- 第四张卡片 -->
+  <rect x="30" y="72" width="44" height="10" rx="5" ry="5" 
+        fill="url(#cardGradient)" filter="url(#softShadow)" />
+  <rect x="32" y="74" width="8" height="6" rx="1" ry="1" fill="#667eea" opacity="0.7" />
+  
+  <!-- 流动箭头 -->
+  <path d="M 82 60 L 92 64 L 82 68 L 85 64 Z" 
+        fill="rgba(255,255,255,0.9)" filter="url(#glow)" />
+  
+  <!-- 装饰性小点 -->
+  <circle cx="88" cy="50" r="1.5" fill="rgba(255,255,255,0.6)" />
+  <circle cx="94" cy="78" r="1" fill="rgba(255,255,255,0.5)" />
+  <circle cx="90" cy="85" r="0.8" fill="rgba(255,255,255,0.4)" />
+  
+  <!-- 分组指示器 -->
+  <rect x="85" y="45" width="12" height="2" rx="1" ry="1" fill="rgba(255,255,255,0.8)" />
+  <rect x="85" y="48" width="8" height="2" rx="1" ry="1" fill="rgba(255,255,255,0.6)" />
+</svg>

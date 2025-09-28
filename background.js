@@ -115,8 +115,11 @@ async function autoGroupTabsByDomain(mainDomain, displayName, tabs, color) {
       if (ungroupedTabs.length > 0) {
         const tabIds = ungroupedTabs.map(tab => tab.id);
         await chrome.tabs.group({ tabIds, groupId: targetGroup.id });
+        
+        // 获取分组中的实际标签页数量
+        const groupTabs = await chrome.tabs.query({ groupId: targetGroup.id });
         await chrome.tabGroups.update(targetGroup.id, {
-          title: `${displayName} (${tabs.length})`
+          title: `${displayName} (${groupTabs.length})`
         });
       }
     } else if (tabs.length > 1) {
@@ -144,6 +147,36 @@ function debounceTabUpdate(callback, delay = 500) {
   clearTimeout(updateTimeout);
   updateTimeout = setTimeout(callback, delay);
 }
+
+// 更新所有分组标题的函数
+async function updateAllGroupTitles() {
+  try {
+    const groups = await chrome.tabGroups.query({});
+    
+    for (const group of groups) {
+      const groupTabs = await chrome.tabs.query({ groupId: group.id });
+      
+      // 从分组标题中提取域名
+      const titleMatch = group.title.match(/^(.+?)\s*\(/);
+      if (titleMatch && groupTabs.length > 0) {
+        const displayName = titleMatch[1];
+        const currentTitle = `${displayName} (${groupTabs.length})`;
+        
+        // 只有当标题需要更新时才更新
+        if (group.title !== currentTitle) {
+          await chrome.tabGroups.update(group.id, {
+            title: currentTitle
+          });
+        }
+      }
+    }
+  } catch (e) {
+    console.log('更新分组标题失败:', e);
+  }
+}
+
+// 定期更新分组标题（每5秒检查一次）
+setInterval(updateAllGroupTitles, 5000);
 
 // 监听标签页更新 - 优化版本
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
@@ -177,6 +210,56 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       pendingUpdates.delete(tabId);
     }
   });
+});
+
+// 监听标签页移除，更新分组标题
+chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
+  try {
+    // 获取所有分组
+    const groups = await chrome.tabGroups.query({});
+    
+    // 更新每个分组的标题
+    for (const group of groups) {
+      const groupTabs = await chrome.tabs.query({ groupId: group.id });
+      if (groupTabs.length > 0) {
+        // 从分组标题中提取域名
+        const titleMatch = group.title.match(/^(.+?)\s*\(/);
+        if (titleMatch) {
+          const displayName = titleMatch[1];
+          await chrome.tabGroups.update(group.id, {
+            title: `${displayName} (${groupTabs.length})`
+          });
+        }
+      }
+    }
+  } catch (e) {
+    console.log('更新分组标题失败:', e);
+  }
+});
+
+// 监听标签页分组变化
+chrome.tabs.onAttached.addListener(async (tabId, attachInfo) => {
+  // 延迟处理，确保分组操作完成
+  setTimeout(async () => {
+    try {
+      const tab = await chrome.tabs.get(tabId);
+      if (tab.groupId !== -1) {
+        const group = await chrome.tabGroups.get(tab.groupId);
+        const groupTabs = await chrome.tabs.query({ groupId: tab.groupId });
+        
+        // 从分组标题中提取域名
+        const titleMatch = group.title.match(/^(.+?)\s*\(/);
+        if (titleMatch) {
+          const displayName = titleMatch[1];
+          await chrome.tabGroups.update(tab.groupId, {
+            title: `${displayName} (${groupTabs.length})`
+          });
+        }
+      }
+    } catch (e) {
+      console.log('处理标签页附加失败:', e);
+    }
+  }, 100);
 });
 
 // 移除不必要的监听器

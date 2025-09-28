@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Tab Domain Classifier",
-  "version": "1.0",
-  "description": "自动将相同域名的标签页分组管理",
+  "name": "TabFlow",
+  "version": "2.0",
+  "description": "智能标签页分组管理，让浏览更流畅",
   
   "permissions": [
     "tabs",
@@ -18,7 +18,7 @@
   
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Tab Domain Classifier"
+    "default_title": "TabFlow - 智能标签页分组"
   },
   
   "icons": {
